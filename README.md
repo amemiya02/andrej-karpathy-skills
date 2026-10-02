@@ -1,16 +1,14 @@
-# Karpathy-Inspired Claude Code Guidelines
+# Karpathy-Inspired Claude Code Guidelines: Build and Explain
 
-> Check out my new project [Multica](https://github.com/multica-ai/multica) — an open-source platform for running and managing coding agents with reusable skills.
->
-> Follow me on X: [https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
+> Based on [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills). This version adds a fifth principle from Andrej's [newer post on understanding LLM outputs](https://x.com/karpathy/status/2105819303471976479).
 
-A single `CLAUDE.md` file to improve Claude Code behavior, derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on LLM coding pitfalls.
+A single `CLAUDE.md` file (also packaged as the `karpathy-build-and-explain` skill) to improve Claude Code behavior, derived from Andrej Karpathy's observations on [LLM coding pitfalls](https://x.com/karpathy/status/2015883857489522876) and on [understanding LLM outputs](https://x.com/karpathy/status/2105819303471976479).
 
 English | [简体中文](./README.zh.md)
 
 ## The Problems
 
-From Andrej's post:
+From Andrej's first post:
 
 > "The models make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, don't seek clarifications, don't surface inconsistencies, don't present tradeoffs, don't push back when they should."
 
@@ -18,9 +16,15 @@ From Andrej's post:
 
 > "They still sometimes change/remove comments and code they don't sufficiently understand as side effects, even if orthogonal to the task."
 
+From Andrej's newer post:
+
+> "We'll be spending a lot more time trying to understand the outputs of language models."
+
+As agents do more of the legwork, the human's work moves up to oversight and understanding. Andrej's tips form a ladder, each rung "even better" than the last: plain writing in the controlled language ASD-STE100 (or "80% of the way" to it), then diagrams, then interactive HTML pages, then bespoke explainer videos. Code is now cheap enough that large, custom, discardable artifacts make sense.
+
 ## The Solution
 
-Four principles in one file that directly address these issues:
+Five principles in one file that directly address these issues:
 
 | Principle | Addresses |
 |-----------|-----------|
@@ -28,8 +32,9 @@ Four principles in one file that directly address these issues:
 | **Simplicity First** | Overcomplication, bloated abstractions |
 | **Surgical Changes** | Orthogonal edits, touching code you shouldn't |
 | **Goal-Driven Execution** | Leverage through tests-first, verifiable success criteria |
+| **Explain for Understanding** | Walls of text, results that are hard to read or check, wrong output format |
 
-## The Four Principles in Detail
+## The Five Principles in Detail
 
 ### 1. Think Before Coding
 
@@ -96,38 +101,72 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let the LLM loop independently. Weak criteria ("make it work") require constant clarification.
 
+### 5. Explain for Understanding
+
+**Your work is done when the human understands it. Pick the format that gets them there fastest.**
+
+Climb the ladder only as far as the content needs:
+
+| Rung | Use for | Form |
+|------|---------|------|
+| 1. Controlled prose | Answers, summaries, reports (the default) | About 80% of the way to ASD-STE100 |
+| 2. Diagram | Structure, flow, sequence, state, before/after | Mermaid in Markdown, ASCII in a terminal |
+| 3. HTML page | Many dimensions, data to explore, comparisons | One `.html` file, no build step |
+| 4. Explainer video | A concept that unfolds over time, or on request | 3Blue1Brown style: storyboard, Manim, TTS narration, ffmpeg |
+
+Writing rules (about 80% ASD-STE100):
+
+- One topic per paragraph, at most 6 sentences
+- Instructions at most 20 words, descriptions at most 25
+- One instruction per sentence, in the imperative
+- Active voice and simple tenses; no "is closing" or "has closed"
+- One word, one meaning; the same word for the same thing every time
+- Simple words: "use", "start", "before" — not "utilize", "commence", "prior to"
+- At most 3 nouns in a cluster; keep "the" and "a"
+- Warnings: the command first, then the risk
+- For other languages, keep the intent: short sentences, active voice, one term per thing
+
+Artifacts are disposable. Simplicity First governs the code you ship, not the throwaway page or video that explains it — but keep artifacts out of the codebase, base every claim on real code or data, and verify they render before handing them over (or say that you could not).
+
+**The test:** Can the user understand and check your result after one read?
+
+The skill ships a fuller reference — the STE limits, verb forms, and word swaps, plus a recipe for each format — in [`skills/karpathy-build-and-explain/references/output-formats.md`](skills/karpathy-build-and-explain/references/output-formats.md).
+
 ## Install
 
 **Option A: Claude Code Plugin (recommended)**
 
 From within Claude Code, first add the marketplace:
 ```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
+/plugin marketplace add zichuanxu/andrej-karpathy-skills
 ```
 
 Then install the plugin:
 ```
-/plugin install andrej-karpathy-skills@karpathy-skills
+/plugin install andrej-karpathy-skills@zichuanxu-karpathy-skills
 ```
 
-This installs the guidelines as a Claude Code plugin, making the skill available across all your projects.
+This installs the guidelines as a Claude Code plugin, making the skill available across all your projects. If you installed the original plugin, uninstall it first so the two skills do not overlap:
+```
+/plugin uninstall andrej-karpathy-skills@karpathy-skills
+```
 
 **Option B: CLAUDE.md (per-project)**
 
 New project:
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/CLAUDE.md
 ```
 
 Existing project (append):
 ```bash
 echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
 ```
 
 ## Using with Cursor
 
-This repository includes a committed Cursor project rule ([`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc)) so the same guidelines apply when you open the project in Cursor. See **[CURSOR.md](CURSOR.md)** for setup, using the rule in other projects, and how this relates to Claude Code.
+This repository includes a committed Cursor project rule ([`.cursor/rules/karpathy-build-and-explain.mdc`](.cursor/rules/karpathy-build-and-explain.mdc)) so the same guidelines apply when you open the project in Cursor. See **[CURSOR.md](CURSOR.md)** for setup, using the rule in other projects, and how this relates to Claude Code.
 
 ## Key Insight
 
@@ -137,6 +176,8 @@ From Andrej:
 
 The "Goal-Driven Execution" principle captures this: transform imperative instructions into declarative goals with verification loops.
 
+The newer post adds the other half. Intelligence and code are now abundant, so it makes sense to build custom, discardable software just to understand something — a web app or an explainer video that would never have been worth making before. The "Explain for Understanding" principle captures this: the result is not done until a human understands it.
+
 ## How to Know It's Working
 
 These guidelines are working if you see:
@@ -145,6 +186,7 @@ These guidelines are working if you see:
 - **Fewer rewrites due to overcomplication** — Code is simple the first time
 - **Clarifying questions come before implementation** — Not after mistakes
 - **Clean, minimal PRs** — No drive-by refactoring or "improvements"
+- **Results you understand on the first read** — Short, plain summaries, and a diagram or page when the content calls for one
 
 ## Customization
 

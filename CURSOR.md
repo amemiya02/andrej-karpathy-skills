@@ -5,18 +5,18 @@ This project includes a **Cursor project rule** so the Karpathy-inspired behavio
 ## In this repository
 
 1. Open the folder in Cursor.
-2. The rule [`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc) is committed with `alwaysApply: true`, so you do not need extra installation steps.
-3. In Cursor, you can confirm it under **Settings → Rules** (or the project rules UI), where `karpathy-guidelines` should appear.
+2. The rule [`.cursor/rules/karpathy-build-and-explain.mdc`](.cursor/rules/karpathy-build-and-explain.mdc) is committed with `alwaysApply: true`, so you do not need extra installation steps.
+3. In Cursor, you can confirm it under **Settings → Rules** (or the project rules UI), where `karpathy-build-and-explain` should appear.
 
 ## Use the same guidelines in another project
 
-**Cursor (recommended):** Copy `.cursor/rules/karpathy-guidelines.mdc` into that project’s `.cursor/rules/` directory (create the folders if needed). Adjust or merge with existing rules as you like.
+**Cursor (recommended):** Copy `.cursor/rules/karpathy-build-and-explain.mdc` into that project’s `.cursor/rules/` directory (create the folders if needed). Adjust or merge with existing rules as you like.
 
 **Other tools:** If a stack only supports a root instruction file, copy [`CLAUDE.md`](CLAUDE.md) into that project instead (or merge its contents into your existing instructions).
 
 ## Optional: personal Agent Skills
 
-If you want the same content as a reusable skill under `~/.cursor/skills`, use [`skills/karpathy-guidelines/SKILL.md`](skills/karpathy-guidelines/SKILL.md). You can copy or symlink it into your personal skills directory; use whatever layout you use for other skills.
+If you want the same content as a reusable skill under `~/.cursor/skills`, use [`skills/karpathy-build-and-explain/SKILL.md`](skills/karpathy-build-and-explain/SKILL.md). You can copy or symlink it into your personal skills directory; use whatever layout you use for other skills.
 
 ## Claude Code vs Cursor
 
@@ -25,4 +25,4 @@ If you want the same content as a reusable skill under `~/.cursor/skills`, use [
 
 ## For contributors
 
-When you change the four principles, keep **[`CLAUDE.md`](CLAUDE.md)** and **[`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc)** in sync. If the published skill/plugin text should match, update **[`skills/karpathy-guidelines/SKILL.md`](skills/karpathy-guidelines/SKILL.md)** as well.
+When you change the five principles, keep **[`CLAUDE.md`](CLAUDE.md)** and **[`.cursor/rules/karpathy-build-and-explain.mdc`](.cursor/rules/karpathy-build-and-explain.mdc)** in sync. If the published skill/plugin text should match, update **[`skills/karpathy-build-and-explain/SKILL.md`](skills/karpathy-build-and-explain/SKILL.md)** as well.

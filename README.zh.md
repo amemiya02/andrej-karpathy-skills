@@ -1,16 +1,14 @@
-# 受 Karpathy 启发的 Claude Code 指南
+# 受 Karpathy 启发的 Claude Code 指南：构建与解释
 
-> 查看我的新项目 [Multica](https://github.com/multica-ai/multica) —— 一个用于运行和管理编码智能体的开源平台，支持可复用的技能。
->
-> 在 X 上关注我：[https://x.com/jiayuan_jy](https://x.com/jiayuan_jy)
+> 基于 [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)。本版本根据 Andrej [关于理解 LLM 输出的新推文](https://x.com/karpathy/status/2105819303471976479) 新增了第五条原则。
 
-一个单一的 `CLAUDE.md` 文件，用于改善 Claude Code 的行为，源自 [Andrej Karpathy 的观察](https://x.com/karpathy/status/2015883857489522876) 关于 LLM 编码陷阱的总结。
+一个单一的 `CLAUDE.md` 文件（同时打包为 `karpathy-build-and-explain` 技能），用于改善 Claude Code 的行为，源自 Andrej Karpathy 关于 [LLM 编码陷阱](https://x.com/karpathy/status/2015883857489522876) 和 [理解 LLM 输出](https://x.com/karpathy/status/2105819303471976479) 的观察。
 
 [English](./README.md) | 简体中文
 
 ## 问题所在
 
-来自 Andrej 的推文：
+来自 Andrej 的第一条推文：
 
 > "模型会代你做错误假设，然后不假思索地执行。它们不管理自身的困惑，不寻求澄清，不呈现矛盾，不展示权衡，在应该提出异议时也不反驳。"
 
@@ -18,9 +16,15 @@
 
 > "它们有时仍会改动或删除自己理解不足的代码和注释，即使这些内容与任务本身无关。"
 
+来自 Andrej 的新推文：
+
+> "我们将会花多得多的时间去理解语言模型的输出。"
+
+随着智能体承担越来越多的具体工作，人的工作会上升到监督与理解。Andrej 的建议构成一个阶梯，每一级都"更好"：用受控语言 ASD-STE100（或"八成符合" ASD-STE100）写作，然后是图表，然后是交互式 HTML 网页，最后是定制的讲解视频。代码已经足够廉价，为了理解而构建大型、定制、用完即弃的产物变得合理。
+
 ## 解决方案
 
-四个原则，集中在一个文件中，直接解决这些问题：
+五个原则，集中在一个文件中，直接解决这些问题：
 
 | 原则 | 解决什么问题 |
 |-----------|-----------|
@@ -28,8 +32,9 @@
 | **简洁优先** | 过度复杂、臃肿抽象 |
 | **精准修改** | 无关编辑、触碰不应碰的代码 |
 | **目标驱动执行** | 通过测试优先、可验证的成功标准 |
+| **为理解而解释** | 大段文字、难以阅读或核对的结果、输出形式不合适 |
 
-## 四个原则详解
+## 五个原则详解
 
 ### 1. 编码前思考
 
@@ -96,38 +101,72 @@ LLM 经常默默选择一种解释然后执行。这个原则强制明确推理�
 
 强有力的成功标准让 LLM 能够独立循环执行。弱标准（"让它工作"）需要不断澄清。
 
+### 5. 为理解而解释
+
+**人理解了，工作才算完成。选择能让人最快理解的形式。**
+
+只按内容需要沿阶梯向上爬：
+
+| 级别 | 适用于 | 形式 |
+|------|---------|------|
+| 1. 受控文字 | 回答、总结、报告（默认） | 八成符合 ASD-STE100 |
+| 2. 图表 | 结构、流程、时序、状态、前后对比 | Markdown 中用 Mermaid，终端中用 ASCII |
+| 3. HTML 网页 | 多维度、需要探索的数据、对比 | 一个 `.html` 文件，无需构建 |
+| 4. 讲解视频 | 随时间展开的概念，或用户要求时 | 3Blue1Brown 风格：分镜、Manim、TTS 旁白、ffmpeg |
+
+写作规则（八成符合 ASD-STE100）：
+
+- 每段一个主题，最多 6 句
+- 指令最多 20 个词，描述最多 25 个词
+- 每句一条指令，用祈使句
+- 主动语态和简单时态；不用 "is closing" 或 "has closed"
+- 一词一义；同一事物始终用同一个词
+- 用简单的词："use"、"start"、"before" —— 而不是 "utilize"、"commence"、"prior to"
+- 名词串最多 3 个词；保留 "the" 和 "a"
+- 警告：先写指令，再写风险
+- 其他语言保留其精神：短句、主动语态、一物一名
+
+产物用完即弃。简洁优先约束的是你交付的代码，而不是用来解释它的临时网页或视频 —— 但要把产物放在代码库之外，每个结论都要基于真实的代码或数据，并在交付前确认它能正常渲染（无法确认时要说明）。
+
+**检验标准：** 用户读一遍，能否理解并核对你的结果？
+
+技能中附带更完整的参考 —— STE 的限制、动词形式和替换词表，以及每种形式的制作方法 —— 见 [`skills/karpathy-build-and-explain/references/output-formats.md`](skills/karpathy-build-and-explain/references/output-formats.md)。
+
 ## 安装
 
 **选项 A：Claude Code 插件（推荐）**
 
 在 Claude Code 中，首先添加插件市场：
 ```
-/plugin marketplace add forrestchang/andrej-karpathy-skills
+/plugin marketplace add zichuanxu/andrej-karpathy-skills
 ```
 
 然后安装插件：
 ```
-/plugin install andrej-karpathy-skills@karpathy-skills
+/plugin install andrej-karpathy-skills@zichuanxu-karpathy-skills
 ```
 
-这会将指南安装为 Claude Code 插件，使其在你所有项目中可用。
+这会将指南安装为 Claude Code 插件，使其在你所有项目中可用。如果你安装过原版插件，请先卸载，以免两个技能重叠：
+```
+/plugin uninstall andrej-karpathy-skills@karpathy-skills
+```
 
 **选项 B：CLAUDE.md（按项目）**
 
 新项目：
 ```bash
-curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+curl -o CLAUDE.md https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/CLAUDE.md
 ```
 
 已有项目（追加）：
 ```bash
 echo "" >> CLAUDE.md
-curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+curl https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
 ```
 
 ## 在 Cursor 中使用
 
-本仓库包含一个已提交的 Cursor 项目规则 ([`.cursor/rules/karpathy-guidelines.mdc`](.cursor/rules/karpathy-guidelines.mdc))，因此在 Cursor 中打开项目时同样适用这些指南。详情请参见 **[CURSOR.md](CURSOR.md)**，包括如何在其他项目中使用该规则，以及它与 Claude Code 的关系。
+本仓库包含一个已提交的 Cursor 项目规则 ([`.cursor/rules/karpathy-build-and-explain.mdc`](.cursor/rules/karpathy-build-and-explain.mdc))，因此在 Cursor 中打开项目时同样适用这些指南。详情请参见 **[CURSOR.md](CURSOR.md)**，包括如何在其他项目中使用该规则，以及它与 Claude Code 的关系。
 
 ## 核心洞察
 
@@ -137,6 +176,8 @@ curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/
 
 "目标驱动执行"原则正是捕捉了这一点：将指令式指令转化为带有验证循环的声明式目标。
 
+新推文补上了另一半。智能和代码如今已很充裕，因此仅仅为了理解某件事而构建定制、用完即弃的软件变得合理 —— 比如过去根本不值得做的网页应用或讲解视频。"为理解而解释"原则正是捕捉了这一点：人没有理解，结果就没有完成。
+
 ## 如何判断它在起作用
 
 如果你看到以下情况，说明这些指南正在发挥作用：
@@ -145,6 +186,7 @@ curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/
 - **因过度复杂而导致的重写更少** —— 代码第一次就写得简洁
 - **澄清问题在实现之前提出** —— 而不是在犯错之后
 - **干净、精简的 PR** —— 没有顺带的重构或"改进"
+- **结果读一遍就能懂** —— 简短、平实的总结，内容需要时附上图表或网页
 
 ## 定制
 

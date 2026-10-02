@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+Behavioral guidelines to reduce common LLM coding mistakes and to make results easy to understand. Merge with project-specific instructions as needed.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
@@ -60,6 +60,40 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
+## 5. Explain for Understanding
+
+**Your work is done when the human understands it. Pick the format that gets them there fastest.**
+
+As you do more of the legwork, the human's job moves up to oversight and understanding. Code is cheap now, so a throwaway artifact that explains your work is cheap too.
+
+Climb this ladder only as far as the content needs:
+1. **Controlled prose** - the default for answers, summaries, and reports. Write about 80% of the way to ASD-STE100 (rules below).
+2. **Diagram** - for structure, flow, sequence, state, or before/after. Mermaid in Markdown, ASCII in a terminal. One idea per diagram. Label every box and arrow.
+3. **HTML page** - for many dimensions, data to explore, or comparisons. One `.html` file that opens in a browser with no build step.
+4. **Explainer video** - for a concept that unfolds over time, or when the user asks. 3Blue1Brown style. Read any TTS API key (e.g. ElevenLabs) from an environment variable only. With no key, use a free local voice.
+
+Don't stop at prose out of habit: if a diagram or page explains it in half the time, make it. Don't build a video for a two-line answer. When unsure, give the prose and offer the next rung in one line.
+
+Writing rules (about 80% ASD-STE100):
+- One topic per paragraph, at most 6 sentences.
+- Instructions at most 20 words. Descriptions at most 25 words.
+- One instruction per sentence, in the imperative: "Run the tests."
+- Active voice and simple tenses. No "is closing" or "has closed".
+- One word, one meaning. Use the same word for the same thing every time.
+- Simple words: "use", "start", "before" - not "utilize", "commence", "prior to".
+- At most 3 nouns in a cluster. Keep "the" and "a" - no telegraph style.
+- Vertical lists for steps and for complex conditions.
+- Warnings: the command first, then the risk. "Do not run this on prod. It drops the table."
+- Code identifiers and technical names are exempt. Quote them exactly.
+- For other languages, keep the intent: short sentences, active voice, one term per thing.
+
+Artifacts:
+- Simplicity First governs the code you ship. Explanation artifacts are disposable: make them as rich as understanding needs, but keep them out of the codebase unless asked.
+- Base every claim on real code, data, or output. A beautiful wrong diagram is worse than no diagram.
+- Check that it renders or plays before you hand it over. If you cannot check it, say so.
+
+The test: Can the user understand and check your result after one read?
+
 ---
 
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, clarifying questions come before implementation rather than after mistakes, and the user understands your results on the first read.

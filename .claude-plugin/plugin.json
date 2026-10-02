@@ -1,11 +1,11 @@
 {
   "name": "andrej-karpathy-skills",
-  "description": "Behavioral guidelines to reduce common LLM coding mistakes, derived from Andrej Karpathy's observations on LLM coding pitfalls",
-  "version": "1.0.0",
+  "description": "Behavioral guidelines to reduce common LLM coding mistakes and to make results easy to understand, derived from Andrej Karpathy's observations on LLM coding pitfalls and on understanding LLM outputs",
+  "version": "2.0.0",
   "author": {
-    "name": "forrestchang"
+    "name": "zichuanxu"
   },
   "license": "MIT",
-  "keywords": ["guidelines", "best-practices", "coding", "karpathy"],
-  "skills": ["./skills/karpathy-guidelines"]
+  "keywords": ["guidelines", "best-practices", "coding", "karpathy", "explanation", "ste100", "diagrams"],
+  "skills": ["./skills/karpathy-build-and-explain"]
 }
