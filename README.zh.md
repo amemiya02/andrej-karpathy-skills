@@ -2,7 +2,7 @@
 
 > 基于 [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)。本版本根据 Andrej [关于理解 LLM 输出的新推文](https://x.com/karpathy/status/2105819303471976479) 新增了第五条原则。
 
-一个单一的 `CLAUDE.md` 文件（同时打包为 `karpathy-build-and-explain` 技能），用于改善 Claude Code 的行为，源自 Andrej Karpathy 关于 [LLM 编码陷阱](https://x.com/karpathy/status/2015883857489522876) 和 [理解 LLM 输出](https://x.com/karpathy/status/2105819303471976479) 的观察。
+一个单一的 `CLAUDE.md` 文件（也提供 `AGENTS.md` 版本，并打包为 `karpathy-build-and-explain` 技能），用于改善 Claude Code 的行为，源自 Andrej Karpathy 关于 [LLM 编码陷阱](https://x.com/karpathy/status/2015883857489522876) 和 [理解 LLM 输出](https://x.com/karpathy/status/2105819303471976479) 的观察。
 
 [English](./README.md) | 简体中文
 
@@ -103,34 +103,38 @@ LLM 经常默默选择一种解释然后执行。这个原则强制明确推理�
 
 ### 5. 为理解而解释
 
-**人理解了，工作才算完成。选择能让人最快理解的形式。**
+**人必须能理解你的输出。选择最容易理解的形式。**
 
-只按内容需要沿阶梯向上爬：
+每一种形式都比前一种更好：
 
-| 级别 | 适用于 | 形式 |
-|------|---------|------|
-| 1. 受控文字 | 回答、总结、报告（默认） | 八成符合 ASD-STE100 |
-| 2. 图表 | 结构、流程、时序、状态、前后对比 | Markdown 中用 Mermaid，终端中用 ASCII |
-| 3. HTML 网页 | 多维度、需要探索的数据、对比 | 一个 `.html` 文件，无需构建 |
-| 4. 讲解视频 | 随时间展开的概念，或用户要求时 | 3Blue1Brown 风格：分镜、Manim、TTS 旁白、ffmpeg |
+| 形式 | 来自 Andrej 的推文 |
+|------|--------------------|
+| 1. 文字 | 用 ASD-STE100 写作；规范很严格，可以只做到"八成符合" |
+| 2. 图表 | 比文字更容易处理、解析和理解 |
+| 3. 网页 | 以 HTML 输出，得到美观、可交互的网页 |
+| 4. 讲解视频 | 定制视频，例如 3Blue1Brown 风格，配 TTS 旁白（ElevenLabs，或免费的本地替代方案） |
 
-写作规则（八成符合 ASD-STE100）：
+智能和代码如今已很充裕，因此大型、定制、用完即弃的产物变得合理。这些产物与"简洁优先"和"精准修改"并不冲突，后两者约束的是你交付的代码。除非被要求，不要把产物放进代码库。
 
-- 每段一个主题，最多 6 句
-- 指令最多 20 个词，描述最多 25 个词
-- 每句一条指令，用祈使句
-- 主动语态和简单时态；不用 "is closing" 或 "has closed"
+写作规则（来自 ASD-STE100）：
+
+- 程序性句子最多 20 个词，描述性句子最多 25 个词
+- 每句一条指令
+- 每段最多 6 句，每段一个主题
+- 名词串最多 3 个词
+- 用祈使句和简单时态；不用 "is closing" 或 "has closed"
+- 程序中用主动语态
 - 一词一义；同一事物始终用同一个词
-- 用简单的词："use"、"start"、"before" —— 而不是 "utilize"、"commence"、"prior to"
-- 名词串最多 3 个词；保留 "the" 和 "a"
-- 警告：先写指令，再写风险
-- 其他语言保留其精神：短句、主动语态、一物一名
+- 用认可词："use"、"start"、"make sure"、"before" —— 而不是 "utilize"、"commence"、"ensure"、"prior to"
+- 保留 "the"、"a" 和 "this"
+- 复杂内容用竖排列表
+- 安全说明：先写指令，再写风险
 
-产物用完即弃。简洁优先约束的是你交付的代码，而不是用来解释它的临时网页或视频 —— 但要把产物放在代码库之外，每个结论都要基于真实的代码或数据，并在交付前确认它能正常渲染（无法确认时要说明）。
+![ASD-STE100 概览图](assets/asd-ste100-overview.png)
 
-**检验标准：** 用户读一遍，能否理解并核对你的结果？
+*ASD-STE100 概览图，来自 [Andrej 的推文](https://x.com/karpathy/status/2105819303471976479)。文字版见 [`skills/karpathy-build-and-explain/references/asd-ste100.md`](skills/karpathy-build-and-explain/references/asd-ste100.md)。*
 
-技能中附带更完整的参考 —— STE 的限制、动词形式和替换词表，以及每种形式的制作方法 —— 见 [`skills/karpathy-build-and-explain/references/output-formats.md`](skills/karpathy-build-and-explain/references/output-formats.md)。
+**检验标准：** 用户读一遍，能否理解你的输出？
 
 ## 安装
 
@@ -162,6 +166,13 @@ curl -o CLAUDE.md https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-sk
 ```bash
 echo "" >> CLAUDE.md
 curl https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+```
+
+**选项 C：AGENTS.md（Codex 等智能体，按项目）**
+
+对于读取 `AGENTS.md` 的工具，使用同样的指南：
+```bash
+curl -o AGENTS.md https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/AGENTS.md
 ```
 
 ## 在 Cursor 中使用

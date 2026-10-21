@@ -2,7 +2,7 @@
 
 > Based on [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills). This version adds a fifth principle from Andrej's [newer post on understanding LLM outputs](https://x.com/karpathy/status/2105819303471976479).
 
-A single `CLAUDE.md` file (also packaged as the `karpathy-build-and-explain` skill) to improve Claude Code behavior, derived from Andrej Karpathy's observations on [LLM coding pitfalls](https://x.com/karpathy/status/2015883857489522876) and on [understanding LLM outputs](https://x.com/karpathy/status/2105819303471976479).
+A single `CLAUDE.md` file (also as `AGENTS.md`, and packaged as the `karpathy-build-and-explain` skill) to improve Claude Code behavior, derived from Andrej Karpathy's observations on [LLM coding pitfalls](https://x.com/karpathy/status/2015883857489522876) and on [understanding LLM outputs](https://x.com/karpathy/status/2105819303471976479).
 
 English | [简体中文](./README.zh.md)
 
@@ -103,34 +103,38 @@ Strong success criteria let the LLM loop independently. Weak criteria ("make it 
 
 ### 5. Explain for Understanding
 
-**Your work is done when the human understands it. Pick the format that gets them there fastest.**
+**The human must understand your output. Pick the format that makes it easiest to understand.**
 
-Climb the ladder only as far as the content needs:
+Each format is better than the one before it:
 
-| Rung | Use for | Form |
-|------|---------|------|
-| 1. Controlled prose | Answers, summaries, reports (the default) | About 80% of the way to ASD-STE100 |
-| 2. Diagram | Structure, flow, sequence, state, before/after | Mermaid in Markdown, ASCII in a terminal |
-| 3. HTML page | Many dimensions, data to explore, comparisons | One `.html` file, no build step |
-| 4. Explainer video | A concept that unfolds over time, or on request | 3Blue1Brown style: storyboard, Manim, TTS narration, ffmpeg |
+| Format | From Andrej's post |
+|--------|--------------------|
+| 1. Writing | Write in ASD-STE100, or about "80% of the way" to it, because the spec is stringent |
+| 2. Diagram | Easier to process, parse, and understand than writing |
+| 3. Web page | Output in HTML for a beautiful, interactive page |
+| 4. Explainer video | A custom video, for example in 3Blue1Brown style, with TTS narration (ElevenLabs, or a free local alternative) |
 
-Writing rules (about 80% ASD-STE100):
+Intelligence and code are now abundant, so large, custom, discardable artifacts make sense. These artifacts do not conflict with Simplicity First and Surgical Changes, which govern the code you ship. Keep them out of the codebase unless asked.
 
-- One topic per paragraph, at most 6 sentences
-- Instructions at most 20 words, descriptions at most 25
-- One instruction per sentence, in the imperative
-- Active voice and simple tenses; no "is closing" or "has closed"
-- One word, one meaning; the same word for the same thing every time
-- Simple words: "use", "start", "before" — not "utilize", "commence", "prior to"
-- At most 3 nouns in a cluster; keep "the" and "a"
-- Warnings: the command first, then the risk
-- For other languages, keep the intent: short sentences, active voice, one term per thing
+Writing rules (from ASD-STE100):
 
-Artifacts are disposable. Simplicity First governs the code you ship, not the throwaway page or video that explains it — but keep artifacts out of the codebase, base every claim on real code or data, and verify they render before handing them over (or say that you could not).
+- Procedural sentences at most 20 words, descriptive sentences at most 25
+- One instruction in each sentence
+- At most 6 sentences in each paragraph, one topic in each paragraph
+- Noun clusters at most 3 words
+- Imperative and simple tenses; no "is closing" or "has closed"
+- Active voice in procedures
+- One meaning for each word; the same word for the same thing every time
+- Approved words: "use", "start", "make sure", "before" — not "utilize", "commence", "ensure", "prior to"
+- Keep "the", "a", and "this"
+- Vertical lists for complex text
+- Safety instructions: the command first, then the risk
 
-**The test:** Can the user understand and check your result after one read?
+![ASD-STE100 overview sheet](assets/asd-ste100-overview.png)
 
-The skill ships a fuller reference — the STE limits, verb forms, and word swaps, plus a recipe for each format — in [`skills/karpathy-build-and-explain/references/output-formats.md`](skills/karpathy-build-and-explain/references/output-formats.md).
+*The ASD-STE100 overview sheet from [Andrej's post](https://x.com/karpathy/status/2105819303471976479). A text copy is in [`skills/karpathy-build-and-explain/references/asd-ste100.md`](skills/karpathy-build-and-explain/references/asd-ste100.md).*
+
+**The test:** Does the user understand your output after one read?
 
 ## Install
 
@@ -162,6 +166,13 @@ Existing project (append):
 ```bash
 echo "" >> CLAUDE.md
 curl https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md
+```
+
+**Option C: AGENTS.md (Codex and other agents, per-project)**
+
+For tools that read `AGENTS.md`, use the same guidelines:
+```bash
+curl -o AGENTS.md https://raw.githubusercontent.com/zichuanxu/andrej-karpathy-skills/main/AGENTS.md
 ```
 
 ## Using with Cursor

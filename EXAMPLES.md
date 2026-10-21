@@ -1,6 +1,6 @@
 # Examples
 
-Real-world examples demonstrating the five principles. Each example shows what LLMs commonly do wrong and how to fix it.
+Real-world code examples demonstrating the four principles. Each example shows what LLMs commonly do wrong and how to fix it.
 
 ---
 
@@ -495,115 +495,6 @@ def sort_scores(scores):
 
 ---
 
-## 5. Explain for Understanding
-
-### Example 1: Wall of Text
-
-**User Request:** "Why did CI fail on my branch?"
-
-**❌ What LLMs Do (Hedged, Passive, One Long Sentence)**
-
-```
-It appears that the failure that has been occurring in the CI pipeline is most likely
-being caused by the fact that the integration tests, which are currently being executed
-in parallel, are utilizing a shared database fixture that is not being properly isolated
-between test runs, and as a result it seems that a number of the tests may be encountering
-state that was left over from previous tests, which could potentially be leading to the
-intermittent failures that you have been observing.
-```
-
-**Problems:**
-- One 84-word sentence; the cause is buried in the middle
-- Passive and progressive forms hide who does what ("is being caused", "are being executed")
-- Hedges ("appears", "most likely", "potentially") with no evidence
-- No next step
-
-**✅ What Should Happen (About 80% ASD-STE100)**
-
-```
-CI failed in `test_orders_api`. Two tests wrote the same database row at the same time.
-
-Evidence: the log shows `IntegrityError: duplicate key order_id=42` from two workers.
-
-Cause: the integration tests run in parallel, and they share the `db` fixture.
-The fixture does not reset between tests.
-
-Fix: give each test its own transaction. Roll it back at the end of the test.
-The change is 6 lines in `conftest.py`. Do you want me to make it?
-```
-
-Short sentences, active voice, one topic per paragraph, the evidence first, and a clear next step.
-
-### Example 2: Prose Where a Diagram Is Clearer
-
-**User Request:** "How does a request get authenticated in this service?"
-
-**❌ What LLMs Do (Narrate the Flow)**
-
-```
-The request first reaches the gateway, which checks whether there is a session cookie,
-and if there is one it calls the session service to validate it, which returns either the
-user or a 401, but if there isn't a cookie it looks at the Authorization header for a
-bearer token, which it verifies using a signing key that it gets from the JWKS cache...
-```
-
-**Problems:**
-- The reader must hold four components and two branches in their head
-- The key fact (a bad cookie never falls back to the token) is easy to miss
-
-**✅ What Should Happen (Diagram, Then What to Notice)**
-
-````
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant G as Gateway
-    participant S as SessionService
-    participant J as JWKSCache
-    C->>G: request
-    alt has session cookie
-        G->>S: validate(cookie)
-        S-->>G: user, or 401
-    else has Bearer token
-        G->>J: get signing key
-        J-->>G: key
-        G->>G: verify JWT signature and expiry
-    end
-    G-->>C: 401 if neither is valid
-```
-
-Notice: the cookie wins. A request with an expired cookie and a valid token gets a 401.
-````
-
-### Example 3: Picking the Rung
-
-**User Request:** "Compare the four caching options we benchmarked."
-
-**❌ What LLMs Do (Wrong Rung, Either Direction)**
-
-- Four long paragraphs that repeat numbers, so the reader must build the table in their head.
-- Or the opposite: a narrated video when the user only asked "Is Redis faster than Memcached here?"
-
-**✅ What Should Happen (Match the Format to the Content)**
-
-The data has 4 options × 5 metrics × 3 load levels, so a page is worth it:
-
-```
-I made /tmp/cache-compare.html: a sortable table and one latency chart per load level,
-built from bench/results.json. I loaded it in a headless browser: no console errors.
-
-Short version: Redis is the fastest at high load. The in-process LRU cache is the
-fastest at low load and costs nothing, but each pod keeps its own copy.
-```
-
-A yes/no question gets one line:
-
-```
-Yes. At 1k req/s, p99 is 4 ms for Redis and 9 ms for Memcached (bench/results.json).
-```
-
----
-
 ## Anti-Patterns Summary
 
 | Principle | Anti-Pattern | Fix |
@@ -612,7 +503,6 @@ Yes. At 1k req/s, p99 is 4 ms for Redis and 9 ms for Memcached (bench/results.js
 | Simplicity First | Strategy pattern for single discount calculation | One function until complexity is actually needed |
 | Surgical Changes | Reformats quotes, adds type hints while fixing bug | Only change lines that fix the reported issue |
 | Goal-Driven | "I'll review and improve the code" | "Write test for bug X → make it pass → verify no regressions" |
-| Explain for Understanding | 84-word hedged sentence; a paragraph for a branching flow; a video for a yes/no answer | Short STE-style prose by default; a diagram for flows; a page or video only when the content needs it |
 
 ## Key Insight
 

@@ -12,7 +12,7 @@ This project includes a **Cursor project rule** so the Karpathy-inspired behavio
 
 **Cursor (recommended):** Copy `.cursor/rules/karpathy-build-and-explain.mdc` into that project’s `.cursor/rules/` directory (create the folders if needed). Adjust or merge with existing rules as you like.
 
-**Other tools:** If a stack only supports a root instruction file, copy [`CLAUDE.md`](CLAUDE.md) into that project instead (or merge its contents into your existing instructions).
+**Other tools:** If a stack only supports a root instruction file, copy [`AGENTS.md`](AGENTS.md) or [`CLAUDE.md`](CLAUDE.md) into that project instead (or merge its contents into your existing instructions).
 
 ## Optional: personal Agent Skills
 
@@ -25,4 +25,4 @@ If you want the same content as a reusable skill under `~/.cursor/skills`, use [
 
 ## For contributors
 
-When you change the five principles, keep **[`CLAUDE.md`](CLAUDE.md)** and **[`.cursor/rules/karpathy-build-and-explain.mdc`](.cursor/rules/karpathy-build-and-explain.mdc)** in sync. If the published skill/plugin text should match, update **[`skills/karpathy-build-and-explain/SKILL.md`](skills/karpathy-build-and-explain/SKILL.md)** as well.
+When you change the five principles, keep **[`CLAUDE.md`](CLAUDE.md)**, **[`AGENTS.md`](AGENTS.md)**, and **[`.cursor/rules/karpathy-build-and-explain.mdc`](.cursor/rules/karpathy-build-and-explain.mdc)** in sync. If the published skill/plugin text should match, update **[`skills/karpathy-build-and-explain/SKILL.md`](skills/karpathy-build-and-explain/SKILL.md)** as well.
